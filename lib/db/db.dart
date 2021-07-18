@@ -21,9 +21,7 @@ class DbHelper {
 
   static Database _db;
   Future<Database> get db async {
-    if (_db == null) {
-      _db = await initializeDb();
-    }
+    _db ??= await initializeDb();
     return _db;
   }
 
@@ -36,9 +34,9 @@ class DbHelper {
 
   void _createDb(Database db, int newVersion) async {
     await db.execute(
-        "CREATE TABLE $tblTodo($colId INTEGER PRIMARY KEY, $colTitle TEXT," +
-            "$colDescription TEXT, $colPriority INTEGER, $colDate TEXT" +
-            ")");
+        "CREATE TABLE $tblTodo($colId INTEGER PRIMARY KEY, $colTitle TEXT,"
+        "$colDescription TEXT, $colPriority INTEGER, $colDate TEXT"
+        ")");
   }
 
   Future<int> insertTodo(Todo todo) async {
@@ -52,9 +50,9 @@ class DbHelper {
     Database db = await this.db;
     var result =
         await db.rawQuery("SELECT * FROM $tblTodo ORDER BY $colPriority ASC");
-    result.forEach((element) {
+    for (var element in result) {
       todoList.add(Todo.fromObject(element));
-    });
+    }
     return todoList;
   }
 

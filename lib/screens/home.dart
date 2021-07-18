@@ -17,24 +17,9 @@ class _HomePageState extends State<HomePage> {
   DbHelper helper = DbHelper();
   List<Todo> todos;
   int count = 0;
-  List labels = [
-    "Flutter Best Language",
-    "My Notes App UI",
-    "Flutter Is Good UI Kit",
-    "Best Developers"
-  ];
-  List texts = [
-    "I am Flutter Developer",
-    "Flutter Is Amazing Language",
-    "Better Than Kotlın",
-    "React JS Falan Filan "
-  ];
+
   @override
   Widget build(BuildContext context) {
-    if (todos == null) {
-      todos = <Todo>[];
-      getData();
-    }
     return Scaffold(
       backgroundColor: const Color(0xFFF6F6F6),
       body: SafeArea(
@@ -68,20 +53,30 @@ class _HomePageState extends State<HomePage> {
               height: 20,
             ),
             Expanded(
-              child: ListView.builder(
-                itemCount: count,
-                itemBuilder: (context, int position) {
-                  return GestureDetector(
-                    onTap: () {
-                      navigateToDetail(this.todos[position]);
-                    },
-                    child: task(
-                      label: todos[position].title,
-                      text: todos[position].description,
+              child: todos == null
+                  ? Center(
+                      child: Text(
+                        "Please Add Note!",
+                        style: GoogleFonts.openSans(
+                          fontSize: 25,
+                          color: Colors.black,
+                        ),
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: count,
+                      itemBuilder: (context, int position) {
+                        return GestureDetector(
+                          onTap: () {
+                            navigateToDetail(todos[position]);
+                          },
+                          child: TaskCard(
+                            label: todos[position].title,
+                            text: todos[position].description,
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
             ),
             Container(
               margin: const EdgeInsets.all(20),

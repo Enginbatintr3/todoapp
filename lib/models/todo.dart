@@ -38,7 +38,7 @@ class Todo {
   }
 
   Map<String, dynamic> toMap() {
-    var map = Map<String, dynamic>();
+    var map = <String, dynamic>{};
     map["title"] = _title;
     map["description"] = _description;
     map["priority"] = _priority;
@@ -50,10 +50,10 @@ class Todo {
   }
 
   Todo.fromObject(dynamic o) {
-    this._id = o["id"];
-    this._title = o["title"];
-    this._description = o["description"];
-    this._priority = o["priority"];
-    this._date = o["date"];
+    _id = o["id"];
+    _title = o["title"];
+    _description = o["description"];
+    _priority = o["priority"];
+    _date = o["date"];
   }
 }

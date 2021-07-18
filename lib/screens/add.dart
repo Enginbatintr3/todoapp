@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_button/3d/3d_button.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:todo_x/db/db.dart';
 import 'package:todo_x/models/todo.dart';
+import 'package:todo_x/utils/button3d.dart';
 import 'package:todo_x/utils/field.dart';
 
 class Add extends StatefulWidget {
   final Todo todo;
 
-  Add(this.todo);
+  const Add(this.todo);
 
   @override
   _AddState createState() => _AddState(todo);
@@ -25,7 +27,6 @@ class _AddState extends State<Add> {
   Widget build(BuildContext context) {
     titlec.text = todo.title;
     note.text = todo.description;
-    var title = todo.title == "" ? "New Todo" : todo.title;
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
@@ -49,23 +50,23 @@ class _AddState extends State<Add> {
                   const SizedBox(
                     height: 20,
                   ),
-                  const Text(
+                  Text(
                     "Add Your Note",
-                    style: TextStyle(color: Colors.black, fontSize: 25),
+                    style: GoogleFonts.openSans(
+                        color: Colors.black,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(
                     height: 20,
                   ),
                   myMethod(titlec, "Enter Your Note Title"),
-                  const Divider(
-                    height: 50,
-                    color: Colors.black,
-                  ),
                   myMethod(note, "Enter Your Note"),
                   const SizedBox(
                     height: 15,
                   ),
                   Button3D(
+                    style: styleofbutton(),
                     onPressed: () {
                       save();
                     },
@@ -74,6 +75,7 @@ class _AddState extends State<Add> {
                     ),
                   ),
                   Button3D(
+                    style: styleofbutton(),
                     onPressed: () {
                       delete();
                     },
@@ -82,6 +84,7 @@ class _AddState extends State<Add> {
                     ),
                   ),
                   Button3D(
+                    style: styleofbutton(),
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -109,10 +112,8 @@ class _AddState extends State<Add> {
     int result;
     result = await helper.deleteTodo(todo.id);
     if (result != 0) {
-      AlertDialog alertDialog = AlertDialog(
-        title: Text("Delete Todo"),
-        content: Text("The Todo has been deleted"),
-      );
+      AlertDialog alertDialog =
+          alertDialogofDB("Delete Todo", "The Todo has been deleted");
       showDialog(context: context, builder: (_) => alertDialog);
     }
   }
@@ -120,7 +121,7 @@ class _AddState extends State<Add> {
   void save() {
     todo.title = titlec.text;
     todo.description = note.text;
-    todo.date = new DateFormat.yMd().format(DateTime.now());
+    todo.date = DateFormat.yMd().format(DateTime.now());
     if (todo.id != null) {
       helper.updateTodo(todo);
     } else {
@@ -133,16 +134,23 @@ class _AddState extends State<Add> {
   void showAlert(bool isUpdate) {
     AlertDialog alertDialog;
     if (isUpdate) {
-      alertDialog = AlertDialog(
-        title: Text("Update Todo"),
-        content: Text("The Todo has been updated"),
-      );
+      alertDialog = alertDialogofDB("Update Todo", "The Todo has been updated");
     } else {
-      alertDialog = AlertDialog(
-        title: Text("Insert Todo"),
-        content: Text("The Todo has been inserted"),
-      );
+      alertDialog =
+          alertDialogofDB("Insert Todo", "The Todo has been inserted");
     }
     showDialog(context: context, builder: (_) => alertDialog);
+  }
+
+  AlertDialog alertDialogofDB(String title, String desc) {
+    return AlertDialog(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(20.0),
+        ),
+      ),
+      title: Text(title),
+      content: Text(desc),
+    );
   }
 }
